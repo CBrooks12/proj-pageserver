@@ -69,17 +69,18 @@ def respond(sock):
 
     parts = request.split()
     if len(parts) > 1 and parts[0] == "GET":
-        filename = parts[1] #store path information
-        filename = filename[1:] #remove first slash
-        print(filename) #debug path
-        try:  #attempt to open file
-            f = open(filename, "r").read()  #store information from file
+        filename = parts[1]
+        filename = filename[1:]
+        print(filename)
+        try:
+            f = open(filename, "r").read()
             transmit("HTTP/1.0 200 OK\n\n", sock)
-            transmit(f, sock) #transmit data
+            # sock.send(bytes('Content-Type: text/HTML\n\n', encoding="utf-8"))
+            transmit(f, sock)
         except:
-            transmit("Error 404\nPage not found",sock) #if no file found, display 404
+            transmit("Error 404\nPage not found",sock)
     else:
-        transmit("\nI don't handle this request: {}\n".format(request), sock) #if not GET, transmit error report
+        transmit("\nI don't handle this request: {}\n".format(request), sock)
 
     sock.close()
 
