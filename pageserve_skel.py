@@ -72,12 +72,15 @@ def respond(sock):
         filename = parts[1] #store path information
         filename = filename[1:] #remove first slash
         print(filename) #debug path
-        try:  #attempt to open file
-            f = open(filename, "r").read()  #store information from file
-            transmit("HTTP/1.0 200 OK\n\n", sock)
-            transmit(f, sock) #transmit data
-        except:
-            transmit("Error 404\nPage not found",sock) #if no file found, display 404
+        if filename.endswith(('.html','.css')):
+            try:  #attempt to open file
+                f = open(filename, "r").read()  #store information from file
+                transmit("HTTP/1.0 200 OK\n\n", sock)
+                transmit(f, sock) #transmit data
+            except:
+                transmit("Error 404\nPage not found\nI don't handle this request: {}\n".format(request),sock) #if no file found, display 404
+        else:
+            transmit("Error 404\n wrong extention. must be html or css \nI don't handle this request: {}\n".format(request),sock)
     else:
         transmit("\nI don't handle this request: {}\n".format(request), sock) #if not GET, transmit error report
 
